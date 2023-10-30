@@ -24,9 +24,6 @@ namespace NotificationCompress.Helps
             var contentResolver = Application.Context.ContentResolver;
             var enableNotificationListeners = Settings.Secure.GetString(contentResolver, "enabled_notification_listeners");
             var packageName = Application.Context.PackageName;
-            Console.WriteLine(NotificationManagerCompat.GetEnabledListenerPackages(Application.Context).Contains(packageName) &&
-                (enableNotificationListeners != null) &&
-                enableNotificationListeners.Contains(nameof(NotificationListener)));
             return NotificationManagerCompat.GetEnabledListenerPackages(Application.Context).Contains(packageName) &&
                 (enableNotificationListeners != null) &&
                 enableNotificationListeners.Contains(nameof(NotificationListener));

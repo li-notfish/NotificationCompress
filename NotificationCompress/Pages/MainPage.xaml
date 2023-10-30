@@ -3,46 +3,77 @@
     x:Class="NotificationCompress.Pages.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:NotificationCompress.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:NotificationCompress.ViewModels"
     x:DataType="vm:MainPageViewModel">
 
     <ScrollView>
         <VerticalStackLayout
-            Padding="30,0"
+            Padding="15,0"
             Spacing="25"
-            VerticalOptions="Center">
-
-            <Image
-                HeightRequest="200"
-                HorizontalOptions="Center"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                Source="dotnet_bot.png" />
-
-            <Label
-                FontSize="32"
-                HorizontalOptions="Center"
-                SemanticProperties.HeadingLevel="Level1"
-                Text="Hello, World!" />
-
-            <Label
-                FontSize="18"
-                HorizontalOptions="Center"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                SemanticProperties.HeadingLevel="Level2"
-                Text="Welcome to .NET Multi-platform App UI" />
-            <HorizontalStackLayout HorizontalOptions="FillAndExpand">
-                <Label
-                    Padding="5"
-                    FontSize="18"
-                    HorizontalOptions="Center"
-                    HorizontalTextAlignment="Center"
-                    Text="Start Listening Notification" />
-                <Switch
-                    x:Name="ListenEnable"
-                    HorizontalOptions="CenterAndExpand"
-                    Toggled="Switch_Toggled"
-                    VerticalOptions="EndAndExpand" />
-            </HorizontalStackLayout>
+            VerticalOptions="FillAndExpand">
+            <Frame BackgroundColor="{AppThemeBinding Light={StaticResource Cyan300Accent}, Dark={StaticResource Yellow300Accent}}" CornerRadius="8">
+                <FlexLayout
+                    AlignContent="SpaceBetween"
+                    AlignItems="Stretch"
+                    Direction="Row"
+                    JustifyContent="SpaceBetween"
+                    VerticalOptions="StartAndExpand">
+                    <Label
+                        Padding="5"
+                        FontSize="18"
+                        HorizontalTextAlignment="Center"
+                        Text="Start Listening"
+                        VerticalOptions="CenterAndExpand" />
+                    <Switch x:Name="ListenEnable" IsToggled="{Binding IsEnableListen}">
+                        <Switch.Behaviors>
+                            <toolkit:EventToCommandBehavior Command="{Binding EnableListenCommand}" EventName="Toggled" />
+                        </Switch.Behaviors>
+                    </Switch>
+                    <Button Command="{Binding ClearsNotificationsCommand}" Text="清除通知" />
+                </FlexLayout>
+            </Frame>
+            <CollectionView EmptyView="没有检测的通知" ItemsSource="{Binding Messages}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="m:Message">
+                        <Frame
+                            Margin="5"
+                            Padding="8"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray300},
+                                                              Dark={StaticResource Gray300}}"
+                            CornerRadius="8">
+                            <VerticalStackLayout>
+                                <HorizontalStackLayout>
+                                    <Image
+                                        HeightRequest="48"
+                                        Source="{Binding IconImage}"
+                                        VerticalOptions="Start"
+                                        WidthRequest="48" />
+                                    <Label
+                                        Margin="5"
+                                        FontAttributes="Bold"
+                                        FontSize="18"
+                                        Text="{Binding Name}"
+                                        VerticalOptions="End" />
+                                </HorizontalStackLayout>
+                                <BoxView
+                                    HeightRequest="2"
+                                    HorizontalOptions="Fill"
+                                    Color="Gray" />
+                                <Label
+                                    Margin="5"
+                                    FontSize="14"
+                                    Text="{Binding Title}" />
+                                <Label
+                                    Margin="5"
+                                    FontSize="14"
+                                    Text="{Binding Content}" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </VerticalStackLayout>
     </ScrollView>
 
