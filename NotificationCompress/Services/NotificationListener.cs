@@ -1,8 +1,13 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Content.PM;
+using Android.Graphics.Drawables;
+using Android.Media.Session;
 using Android.OS;
 using Android.Service.Notification;
+using AndroidX.AppCompat.Widget;
+using AndroidX.Core.App;
+using AndroidX.Core.Content;
 using CommunityToolkit.Mvvm.Messaging;
 using NotificationCompress.Messages;
 using Message = NotificationCompress.Models.Message;
@@ -55,7 +60,8 @@ namespace NotificationCompress.Services
         public void UpdateNotification(StatusBarNotification sbn)
         {
             var bundle = sbn.Notification.Extras;
-            var isMedia = bundle.GetParcelable(Notification.ExtraMediaSession) is not null;
+            
+            var isMedia = bundle.GetParcelable(NotificationCompat.ExtraMediaSession) is not null;
             var isGroupHeader = (sbn.Notification.Flags & NotificationFlags.GroupSummary) != 0;
             var isOngoing = (sbn.Notification.Flags & NotificationFlags.OngoingEvent) != 0;
             Message message = new Message();
@@ -73,15 +79,25 @@ namespace NotificationCompress.Services
                     {
                         message.Icon = sbn.Notification.SmallIcon.ResId;
                     }
-                    else
+                    if(message.Icon == 0)
+                    {
+                        var smallIconString = sbn.Notification.SmallIcon.ToString();
+                        if (smallIconString.Contains("id="))
+                        {
+                            var iconHexId = smallIconString.Substring(smallIconString.IndexOf("id=") + 5).Replace(")", "");
+                            message.Icon = int.Parse(iconHexId, System.Globalization.NumberStyles.HexNumber);
+                        }
+                    }
+                    if (message.Icon == 0)
                     {
                         message.Icon = sbn.Notification.Icon;
                     }
                 }
                 catch (Exception ex)
                 {
-                    message.Icon = 0;
+                    message.Icon = default;
                 }
+                message.GetImage();
                 WeakReferenceMessenger.Default.Send(new GetNotification(message));
                 bundle.Dispose();
             }

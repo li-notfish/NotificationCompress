@@ -46,10 +46,11 @@
                             <VerticalStackLayout>
                                 <HorizontalStackLayout>
                                     <Image
-                                        HeightRequest="48"
-                                        Source="{Binding IconImage}"
+                                        Aspect="Center"
+                                        HeightRequest="24"
+                                        Source="{Binding IconImage, Mode=OneWay}"
                                         VerticalOptions="Start"
-                                        WidthRequest="48" />
+                                        WidthRequest="24" />
                                     <Label
                                         Margin="5"
                                         FontAttributes="Bold"

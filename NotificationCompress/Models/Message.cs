@@ -1,6 +1,8 @@
 ﻿using Android.App;
 using Android.Graphics;
+using Android.Graphics.Drawables;
 using AndroidX.Core.Content;
+using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 using NotificationCompress.Helps;
 using System;
 using System.Collections.Generic;
@@ -17,22 +19,34 @@ namespace NotificationCompress.Models
         public string Name { get; set; }
         public string PackageName { get; set; }
         public int Icon { get; set; }
-        public ImageSource IconImage { get => GetImage(); }
+        public ImageSource IconImage { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public PendingIntent PendingIntent { get; set; }
 
-        private ImageSource GetImage()
+        public void GetImage()
         {
-            var pm = AndroidApplication.Context.CreatePackageContext(PackageName,0);
-            var mIcon = Task.Run(async () => await BitmapFactory.DecodeResourceAsync(pm.Resources, Icon)).Result;
-            var stream = BitImageHelp.GetImageStream(mIcon);
-            pm.Dispose();
-            if(mIcon.IsRecycled != true)
+            Bitmap mIcon = default;
+            if (Icon == 0)
             {
-                mIcon.Recycle();    
+                IconImage = default;
+                return;
             }
-            return ImageSource.FromStream(() => stream);
+            var pm = AndroidApplication.Context.CreatePackageContext(PackageName,Android.Content.PackageContextFlags.IgnoreSecurity);
+            var drawable = ContextCompat.GetDrawable(pm, Icon);
+            //mIcon = await BitmapFactory.DecodeResourceAsync(pm.Resources, Icon);
+            if(drawable is BitmapDrawable bitmapDrawable && bitmapDrawable is not null)
+            {
+                mIcon = bitmapDrawable.Bitmap;
+            }
+            if(mIcon is default(Bitmap))
+            {
+                IconImage = default;
+                return;
+            }
+            var bubbf = BitImageHelp.GetImageStream(mIcon);
+            IconImage = ImageSource.FromStream(() => new MemoryStream(bubbf));
+
         }
     }
 }
