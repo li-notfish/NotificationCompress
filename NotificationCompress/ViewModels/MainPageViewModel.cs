@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using NotificationCompress.Helps;
 using NotificationCompress.Messages;
+using NotificationCompress.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,16 +19,25 @@ namespace NotificationCompress.ViewModels
 {
     public partial class MainPageViewModel :ObservableRecipient
     {
+        private readonly SystemServices pmServices;
+
         [ObservableProperty]
         private bool isEnableListen = false;
 
         [ObservableProperty]
         private ObservableCollection<Message> messages = new ObservableCollection<Message>();
 
-        public MainPageViewModel()
+        public MainPageViewModel(SystemServices systemServices)
         {
+            pmServices = systemServices;
+
             WeakReferenceMessenger.Default.Register<GetNotification>(this, (r, m) =>
             {
+                Task.Run(async () =>
+                {
+                    m.Value.Icon = await LoadImageSourceHelp.LoadImageAsync(m.Value.IconImage, pmServices.GetApplicationInfo(m.Value.PackageName));
+                });
+                m.Value.GetImage();
                 Messages.Add(m.Value);
             });
             InitProcess();

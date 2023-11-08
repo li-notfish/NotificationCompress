@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="NotificationCompress.Pages.AppFiltePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:NotificationCompress.Models"
+    xmlns:vm="clr-namespace:NotificationCompress.ViewModels"
+    Title="AppFiltePage"
+    x:DataType="vm:AppFiltePageViewModel">
+    <CollectionView ItemsSource="{Binding Shortcuts}">
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="m:AppShortcut">
+                <FlexLayout Margin="10" JustifyContent="SpaceBetween">
+                    <HorizontalStackLayout Spacing="10">
+                        <Image
+                            HeightRequest="48"
+                            Source="{Binding IconImage}"
+                            WidthRequest="48" />
+                        <Label
+                            FontSize="Header"
+                            LineBreakMode="TailTruncation"
+                            Text="{Binding Title}"
+                            VerticalTextAlignment="Center" />
+                    </HorizontalStackLayout>
+                    <Switch IsToggled="{Binding IsChecked}" />
+                </FlexLayout>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentPage>

@@ -1,4 +1,4 @@
-﻿using Android.App;
+﻿using MauiApplication = Microsoft.Maui.MauiApplication;
 using Android.Content;
 using Android.Content.PM;
 using Android.Graphics.Drawables;
@@ -11,6 +11,8 @@ using AndroidX.Core.Content;
 using CommunityToolkit.Mvvm.Messaging;
 using NotificationCompress.Messages;
 using Message = NotificationCompress.Models.Message;
+using Android.App;
+using NotificationCompress.Helps;
 
 namespace NotificationCompress.Services
 {
@@ -18,11 +20,10 @@ namespace NotificationCompress.Services
     [IntentFilter(new[] { "android.service.notification.NotificationListenerService" })]
     public class NotificationListener : NotificationListenerService
     {
-        private PackageManager PackageManager;
+        private SystemServices pmService = MauiApplication.Current.Services.GetService(typeof(SystemServices)) as SystemServices;
 
         public override void OnCreate()
         {
-            PackageManager = Application.PackageManager;
             base.OnCreate();
         }
 
@@ -67,7 +68,6 @@ namespace NotificationCompress.Services
             Message message = new Message();
             if(bundle.ContainsKey(Notification.ExtraTitle) && !isMedia &&!isGroupHeader && !isOngoing && !sbn.PackageName.Contains("com.android.systemui"))
             {
-                message.Name = PackageManager.GetApplicationLabel(PackageManager.GetApplicationInfo(sbn.PackageName, 0));
                 message.PackageName = sbn.PackageName;
                 message.Id = sbn.Id;
                 message.Title = bundle.GetString(Notification.ExtraTitle) ?? "";
@@ -75,29 +75,16 @@ namespace NotificationCompress.Services
                 message.PendingIntent = sbn.Notification.ContentIntent;
                 try
                 {
-                    if(Build.VERSION.SdkInt >= BuildVersionCodes.P)
+                    using (var applicationInfo = pmService.GetApplicationInfo(sbn.PackageName))
                     {
-                        message.Icon = sbn.Notification.SmallIcon.ResId;
-                    }
-                    if(message.Icon == 0)
-                    {
-                        var smallIconString = sbn.Notification.SmallIcon.ToString();
-                        if (smallIconString.Contains("id="))
-                        {
-                            var iconHexId = smallIconString.Substring(smallIconString.IndexOf("id=") + 5).Replace(")", "");
-                            message.Icon = int.Parse(iconHexId, System.Globalization.NumberStyles.HexNumber);
-                        }
-                    }
-                    if (message.Icon == 0)
-                    {
-                        message.Icon = sbn.Notification.Icon;
+                        message.Name = pmService.GetApplicationName(applicationInfo);
+                        message.Icon = DrawBitHelp.GetBitmap(pmService.GetApplicationIcon(applicationInfo));
                     }
                 }
                 catch (Exception ex)
                 {
                     message.Icon = default;
                 }
-                message.GetImage();
                 WeakReferenceMessenger.Default.Send(new GetNotification(message));
                 bundle.Dispose();
             }

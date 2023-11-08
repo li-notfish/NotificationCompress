@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using NotificationCompress.Pages;
+using NotificationCompress.Services;
 using NotificationCompress.ViewModels;
 
 namespace NotificationCompress
@@ -19,8 +20,12 @@ namespace NotificationCompress
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
             builder.Services
+                .AddSingleton<SystemServices>()
                 .AddSingleton<MainPageViewModel>()
-                .AddSingleton<MainPage>();
+                .AddSingleton<AppFiltePageViewModel>()
+                .AddSingleton<MainPage>()
+                .AddSingleton<AppFiltePage>();
+
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif

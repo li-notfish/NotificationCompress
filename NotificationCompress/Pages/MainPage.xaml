@@ -54,7 +54,7 @@
                                     <Label
                                         Margin="5"
                                         FontAttributes="Bold"
-                                        FontSize="18"
+                                        FontSize="Header"
                                         Text="{Binding Name}"
                                         VerticalOptions="End" />
                                 </HorizontalStackLayout>
@@ -64,11 +64,11 @@
                                     Color="Gray" />
                                 <Label
                                     Margin="5"
-                                    FontSize="14"
+                                    FontSize="Subtitle"
                                     Text="{Binding Title}" />
                                 <Label
                                     Margin="5"
-                                    FontSize="14"
+                                    FontSize="Body"
                                     Text="{Binding Content}" />
                             </VerticalStackLayout>
                         </Frame>
