@@ -2,9 +2,9 @@ using NotificationCompress.ViewModels;
 
 namespace NotificationCompress.Pages;
 
-public partial class AppFiltePage : ContentPage
+public partial class AppFilterPage : ContentPage
 {
-	public AppFiltePage(AppFiltePageViewModel viewModel)
+	public AppFilterPage(AppFilterPageViewModel viewModel)
 	{
 		InitializeComponent();
 		BindingContext = viewModel;

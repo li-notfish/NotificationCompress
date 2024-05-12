@@ -48,7 +48,7 @@
                                     <Image
                                         Aspect="Center"
                                         HeightRequest="24"
-                                        Source="{Binding IconImage, Mode=OneWay}"
+                                        Source="{Binding IconBytes, Mode=OneWay, Converter={toolkit:ByteArrayToImageSourceConverter}}"
                                         VerticalOptions="Start"
                                         WidthRequest="24" />
                                     <Label

@@ -1,12 +1,6 @@
-﻿using Android.App;
-using Android.Provider;
+﻿using Android.Provider;
 using AndroidX.Core.App;
 using NotificationCompress.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Microsoft.Maui.ApplicationModel.Permissions;
 using Application = Android.App.Application;
 

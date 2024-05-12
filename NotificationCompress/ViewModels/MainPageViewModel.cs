@@ -1,17 +1,12 @@
-﻿using Android.App;
-using Android.Content;
+﻿using Android.Content;
+using Android.Graphics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using NotificationCompress.Helps;
 using NotificationCompress.Messages;
 using NotificationCompress.Services;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AndroidApplication = Android.App.Application;
 using Message = NotificationCompress.Models.Message;
 
@@ -20,6 +15,8 @@ namespace NotificationCompress.ViewModels
     public partial class MainPageViewModel :ObservableRecipient
     {
         private readonly SystemServices pmServices;
+
+        private readonly IconCache iconCache = IconCache.Instance;
 
         [ObservableProperty]
         private bool isEnableListen = false;
@@ -33,11 +30,15 @@ namespace NotificationCompress.ViewModels
 
             WeakReferenceMessenger.Default.Register<GetNotification>(this, (r, m) =>
             {
-                Task.Run(async () =>
+                Bitmap res = null;
+                iconCache.BitmapCache.TryGetValue(m.Value.PackageName, out res);
+                if (res == null)
                 {
-                    m.Value.Icon = await LoadImageSourceHelp.LoadImageAsync(m.Value.IconImage, pmServices.GetApplicationInfo(m.Value.PackageName));
-                });
-                m.Value.GetImage();
+                    res = pmServices.GetRawIconBitmap(m.Value.PackageName);
+                    iconCache.BitmapCache.Add(m.Value.PackageName, res);
+                }
+                var buff = BitImageHelp.GetImageStream(res);
+                m.Value.IconBytes = buff;
                 Messages.Add(m.Value);
             });
             InitProcess();

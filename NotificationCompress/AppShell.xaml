@@ -11,8 +11,8 @@
             ContentTemplate="{DataTemplate local:MainPage}"
             Route="MainPage" />
         <ShellContent
-            Title="AppFilte"
-            ContentTemplate="{DataTemplate local:AppFiltePage}"
-            Route="AppFilte" />
+            Title="AppFilter"
+            ContentTemplate="{DataTemplate local:AppFilterPage}"
+            Route="AppFilter" />
     </TabBar>
 </Shell>

@@ -73,18 +73,6 @@ namespace NotificationCompress.Services
                 message.Title = bundle.GetString(Notification.ExtraTitle) ?? "";
                 message.Content = bundle.GetString(Notification.ExtraText) ?? "";
                 message.PendingIntent = sbn.Notification.ContentIntent;
-                try
-                {
-                    using (var applicationInfo = pmService.GetApplicationInfo(sbn.PackageName))
-                    {
-                        message.Name = pmService.GetApplicationName(applicationInfo);
-                        message.Icon = DrawBitHelp.GetBitmap(pmService.GetApplicationIcon(applicationInfo));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    message.Icon = default;
-                }
                 WeakReferenceMessenger.Default.Send(new GetNotification(message));
                 bundle.Dispose();
             }

@@ -22,9 +22,9 @@ namespace NotificationCompress
             builder.Services
                 .AddSingleton<SystemServices>()
                 .AddSingleton<MainPageViewModel>()
-                .AddSingleton<AppFiltePageViewModel>()
+                .AddSingleton<AppFilterPageViewModel>()
                 .AddSingleton<MainPage>()
-                .AddSingleton<AppFiltePage>();
+                .AddSingleton<AppFilterPage>();
 
 #if DEBUG
     		builder.Logging.AddDebug();
