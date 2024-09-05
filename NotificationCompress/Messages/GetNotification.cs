@@ -10,4 +10,28 @@ namespace NotificationCompress.Messages
             
         }
     }
+
+    public class SendRuleAction : ValueChangedMessage<Tuple<RuleAction,bool>>
+    {
+        public SendRuleAction(Tuple<RuleAction,bool> ruleSetCompleted) : base(ruleSetCompleted)
+        {
+            
+        }
+    }
+
+    public class SendFilterMessage : ValueChangedMessage<List<Message>>
+    {
+        public SendFilterMessage(List<Message> filterMessage) : base(filterMessage)
+        {
+            
+        }
+    }
+
+    public class SendNextSchedulerMessage : ValueChangedMessage<int>
+    {
+        public SendNextSchedulerMessage(int nextScheduler) : base(nextScheduler)
+        {
+            
+        }
+    }
 }

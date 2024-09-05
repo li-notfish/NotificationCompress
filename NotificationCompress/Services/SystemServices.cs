@@ -3,6 +3,7 @@ using Android.Content.PM;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.OS;
+using Android.Util;
 using AndroidApplication = Android.App.Application;
 
 
@@ -15,7 +16,6 @@ namespace NotificationCompress.Services
         public Bitmap GetRawIconBitmap(string packageName)
         {
             Bitmap res = null;
-
             try
             {
                 Drawable icon = GetApplicationInfo(packageName).LoadIcon(packageManager);
@@ -27,42 +27,40 @@ namespace NotificationCompress.Services
                 }
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                Log.Error("Error: ",e.Message);
             }
             
             return res;
         }
 
-        public List<PackageInfo> GetInstalledPackages(int flags = 0)
+        public IEnumerable<PackageInfo> GetInstalledPackages(int flags = 0)
         {
             if(Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
             {
-                return packageManager.GetInstalledPackages(PackageManager.PackageInfoFlags.Of((long)PackageInfoFlags.MatchAll)).ToList<PackageInfo>();
+                return packageManager.GetInstalledPackages(PackageManager.PackageInfoFlags.Of((long)PackageInfoFlags.MatchAll));
             }
             else
             {
-                return packageManager.GetInstalledPackages(PackageInfoFlags.MatchAll).ToList<PackageInfo>();
+                return packageManager.GetInstalledPackages(PackageInfoFlags.MatchAll);
             }
         }
 
-        public List<ApplicationInfo> GetInstalledApplication()
+        public IEnumerable<ApplicationInfo> GetInstalledApplication()
         {
             var launchIntent = new Intent(Intent.ActionMain)
                     .AddCategory(Intent.CategoryLauncher);
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
             {
                 return packageManager.QueryIntentActivities(launchIntent, PackageManager.ResolveInfoFlags.Of(0))
-                    .Select(x => x.ActivityInfo.ApplicationInfo)
-                    .ToList();
+                    .Select(x => x.ActivityInfo.ApplicationInfo);
                 
             }
             else
             {
                return packageManager.QueryIntentActivities(launchIntent,0)
-                    .Select(x => x.ActivityInfo.ApplicationInfo)
-                    .ToList(); 
+                    .Select(x => x.ActivityInfo.ApplicationInfo); 
             }
         }
 
@@ -84,9 +82,11 @@ namespace NotificationCompress.Services
 
         public string GetApplicationName(string packageName, int flags = 0)
         {
-            using var applicationinfo = GetApplicationInfo(packageName, flags);
-            return packageManager.GetApplicationLabel(applicationinfo);
+            using var applicationInfo = GetApplicationInfo(packageName, flags);
+            return packageManager.GetApplicationLabel(applicationInfo);
         }
+
+        public string GetApplicationName(string packageName) => GetApplicationName(GetApplicationInfo(packageName));
 
         public Drawable GetApplicationIcon(ApplicationInfo applicationInfo) => packageManager.GetApplicationIcon(applicationInfo);
     }

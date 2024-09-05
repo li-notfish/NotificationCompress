@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    x:Class="NotificationCompress.Pages.AppFilterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:NotificationCompress.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:NotificationCompress.ViewModels"
+    x:Name="page"
+    x:DataType="vm:AppFilterPageViewModel">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="70" />
+        </Grid.RowDefinitions>
+        <CollectionView
+            x:Name="AppList"
+            Grid.Row="0"
+            Grid.RowSpan="1"
+            ItemsSource="{Binding Shortcuts}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="m:AppShortcut">
+                    <FlexLayout Margin="10" JustifyContent="SpaceBetween">
+                        <HorizontalStackLayout Spacing="10">
+                            <Image
+                                HeightRequest="48"
+                                Source="{Binding IconBytes, Converter={toolkit:ByteArrayToImageSourceConverter}}"
+                                WidthRequest="48" />
+                            <Label
+                                FontSize="Header"
+                                LineBreakMode="TailTruncation"
+                                Text="{Binding Title}"
+                                VerticalTextAlignment="Center" />
+                        </HorizontalStackLayout>
+                        <Switch IsToggled="{Binding IsChecked}">
+                            <Switch.Behaviors>
+                                <toolkit:EventToCommandBehavior
+                                    Command="{Binding BindingContext.AddToListeningCommand, Source={x:Reference page}}"
+                                    CommandParameter="{Binding}"
+                                    EventName="Toggled" />
+                            </Switch.Behaviors>
+                        </Switch>
+                    </FlexLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Button
+            Grid.Row="1"
+            Margin="10"
+            Clicked="Closed_Clicked"
+            HeightRequest="45"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            WidthRequest="45" />
+    </Grid>
+</toolkit:Popup>

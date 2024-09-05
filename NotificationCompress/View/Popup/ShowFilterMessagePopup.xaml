@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="NotificationCompress.View.Popup.ShowFilterMessagePopup"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:NotificationCompress.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:NotificationCompress.ViewModels.Popup"
+    x:Name="ShowPage"
+    x:DataType="vm:ShowFilterMessagePopupViewModel">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="70" />
+        </Grid.RowDefinitions>
+        <CollectionView
+            Grid.Row="0"
+            IsGrouped="True"
+            ItemsSource="{Binding FilterGroupMessage}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout x:DataType="m:Message">
+                        <VerticalStackLayout.Behaviors>
+                            <toolkit:TouchBehavior Command="{Binding OpenMessageIntentCommand, Source={x:Reference ShowPage}}" CommandParameter="{Binding .}" />
+                        </VerticalStackLayout.Behaviors>
+                        <Label Text="{Binding Title}" />
+                        <Label Text="{Binding Content}" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Button
+            Grid.Row="1"
+            Command="{Binding NextSchedulerCommand}"
+            Text="开始下一个计划" />
+    </Grid>
+</ContentView>

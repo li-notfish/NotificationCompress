@@ -7,7 +7,8 @@ namespace NotificationCompress.Models
         public string Title { get; set; }
         public string PackageName { get; set; }
         public byte[] IconBytes { get; set; }
-        public bool IsChecked { get; set; } = false;
+
+        public bool IsChecked { get; set; }
 
         public AppShortcut()
         {

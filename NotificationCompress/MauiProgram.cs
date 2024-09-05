@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using NotificationCompress.Helps;
 using NotificationCompress.Pages;
 using NotificationCompress.Services;
 using NotificationCompress.ViewModels;
@@ -22,9 +23,13 @@ namespace NotificationCompress
             builder.Services
                 .AddSingleton<SystemServices>()
                 .AddSingleton<MainPageViewModel>()
-                .AddSingleton<AppFilterPageViewModel>()
-                .AddSingleton<MainPage>()
-                .AddSingleton<AppFilterPage>();
+                .AddSingleton<ActionsPageViewModel>()
+                .AddTransient<MainPage>()
+                .AddTransient<ActionsPage>()
+                .AddSingleton<LocalDatabase>()
+                .AddSingleton(IconCache.Instance)
+                .AddSingleton(RuleAggregator.Instance)
+                .AddTransientPopup<AppFilterPage, AppFilterPageViewModel>();
 
 #if DEBUG
     		builder.Logging.AddDebug();

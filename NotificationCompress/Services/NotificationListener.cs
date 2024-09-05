@@ -20,7 +20,8 @@ namespace NotificationCompress.Services
     [IntentFilter(new[] { "android.service.notification.NotificationListenerService" })]
     public class NotificationListener : NotificationListenerService
     {
-        private SystemServices pmService = MauiApplication.Current.Services.GetService(typeof(SystemServices)) as SystemServices;
+        private SystemServices pmService = IPlatformApplication.Current.Services.GetService(typeof(SystemServices)) as SystemServices;
+        private RuleAggregator ruleAggregator = RuleAggregator.Instance;
 
         public override void OnCreate()
         {
@@ -60,23 +61,64 @@ namespace NotificationCompress.Services
 
         public void UpdateNotification(StatusBarNotification sbn)
         {
+            CheckNotificationInRule(sbn);
+        }
+
+        public void CheckNotificationInRule(StatusBarNotification sbn)
+        {
+            var ruleIds = ruleAggregator.Actions.Where(x => x.RulePkg.Contains(sbn.PackageName))
+                .Select(x => (x.Id,x.RuleType));
+
+            Message message = null;
+
+            foreach (var ruleId in ruleIds) 
+            {
+                switch (ruleId.RuleType)
+                {
+                    case RuleEnum.Silence:
+                        message = MessageHandle(sbn);
+                        ruleAggregator.SilenceMessageAggregator.Add(message);
+                        break;
+                    case RuleEnum.Filter:
+                        message = MessageHandle(sbn);
+                        ruleAggregator.FilterMessageAggregator.Add(message);
+                        break;
+                    case RuleEnum.Transmit:
+                        message = MessageHandle(sbn);
+                        ruleAggregator.TransmitMessageAggregator.Add(message);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if(message != null)
+            {
+                CancelNotification(sbn.Key);
+                WeakReferenceMessenger.Default.Send(new GetNotification(message));
+            }
+        }
+
+       public Message MessageHandle(StatusBarNotification sbn)
+       {
             var bundle = sbn.Notification.Extras;
-            
+
             var isMedia = bundle.GetParcelable(NotificationCompat.ExtraMediaSession) is not null;
             var isGroupHeader = (sbn.Notification.Flags & NotificationFlags.GroupSummary) != 0;
             var isOngoing = (sbn.Notification.Flags & NotificationFlags.OngoingEvent) != 0;
-            Message message = new Message();
-            if(bundle.ContainsKey(Notification.ExtraTitle) && !isMedia &&!isGroupHeader && !isOngoing && !sbn.PackageName.Contains("com.android.systemui"))
+            Message message = null;
+            if (bundle.ContainsKey(Notification.ExtraTitle) && !isMedia && !isGroupHeader && !isOngoing && !sbn.PackageName.Contains("com.android.systemui"))
             {
-                message.PackageName = sbn.PackageName;
-                message.Id = sbn.Id;
-                message.Title = bundle.GetString(Notification.ExtraTitle) ?? "";
-                message.Content = bundle.GetString(Notification.ExtraText) ?? "";
-                message.PendingIntent = sbn.Notification.ContentIntent;
-                WeakReferenceMessenger.Default.Send(new GetNotification(message));
-                bundle.Dispose();
+                var id = sbn.Id;
+                var pkgName = sbn.PackageName;
+                var name = pmService.GetApplicationName(pkgName);
+                var title = bundle.GetString(Notification.ExtraTitle) ?? "";
+                var content = bundle.GetString(Notification.ExtraText) ?? "";
+                var pendingIntent = sbn.Notification.ContentIntent;
+                message = Message.Build(id,name,pkgName,title,content,pendingIntent);    
             }
-
+            bundle.Dispose();
+            return message;
         }
+
     }
 }

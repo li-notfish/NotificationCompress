@@ -28,19 +28,7 @@ namespace NotificationCompress.ViewModels
         {
             pmServices = systemServices;
 
-            WeakReferenceMessenger.Default.Register<GetNotification>(this, (r, m) =>
-            {
-                Bitmap res = null;
-                iconCache.BitmapCache.TryGetValue(m.Value.PackageName, out res);
-                if (res == null)
-                {
-                    res = pmServices.GetRawIconBitmap(m.Value.PackageName);
-                    iconCache.BitmapCache.Add(m.Value.PackageName, res);
-                }
-                var buff = BitImageHelp.GetImageStream(res);
-                m.Value.IconBytes = buff;
-                Messages.Add(m.Value);
-            });
+            WeakReferenceMessenger.Default.Register<GetNotification>(this, GetNotificationMessageHandle);
             InitProcess();
         }
 
@@ -84,6 +72,20 @@ namespace NotificationCompress.ViewModels
         public void ClearsNotifications()
         {
             Messages.Clear();
+        }
+
+        public void GetNotificationMessageHandle(object r, GetNotification getNotification)
+        {
+            Bitmap res = null;
+            iconCache.BitmapCache.TryGetValue(getNotification.Value.PackageName, out res);
+            if (res == null)
+            {
+                res = pmServices.GetRawIconBitmap(getNotification.Value.PackageName);
+                iconCache.BitmapCache.Add(getNotification.Value.PackageName, res);
+            }
+            var buff = BitImageHelp.GetImageStream(res);
+            getNotification.Value.IconBytes = buff;
+            Messages.Add(getNotification.Value);
         }
     }
 }

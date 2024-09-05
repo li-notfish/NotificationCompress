@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using NotificationCompress.Models;
 using NotificationCompress.Helps;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Maui.Core;
 
 namespace NotificationCompress.ViewModels
 {
@@ -14,16 +15,21 @@ namespace NotificationCompress.ViewModels
 
         private readonly string storageConfigDir = FileSystem.Current.AppDataDirectory;
 
-        private readonly IconCache iconCache = IconCache.Instance;
+        private readonly IconCache iconCache;
 
-        private bool isInit = false;
+        private IPopupService PopupService;
 
         [ObservableProperty]
         ObservableCollection<AppShortcut> shortcuts = new ObservableCollection<AppShortcut>();
 
-        public AppFilterPageViewModel(SystemServices systemServices)
+        [ObservableProperty]
+        ObservableCollection<AppShortcut> selectShortcuts = new ObservableCollection<AppShortcut>();
+
+        public AppFilterPageViewModel(SystemServices systemServices, IPopupService popupService,IconCache iconCache)
         {
             systemService = systemServices;
+            this.iconCache = iconCache;
+            PopupService = popupService;
             if(shortcuts.Count == 0)
             {
                 InitData();
@@ -50,28 +56,20 @@ namespace NotificationCompress.ViewModels
                 var buff = BitImageHelp.GetImageStream(res);
                 appShortcut.IconBytes = buff;
                 Shortcuts.Add(appShortcut);
-                isInit = true;
             }
-        }
-
-        private void SaveConfig()
-        {
-            var IsCheckedList = shortcuts.Where(x => x.IsChecked == true).ToList();
-
-            var targetConfigFile = Path.Combine(storageConfigDir,"config.json");
-
-            using(FileStream outputFileStream = File.Create(targetConfigFile))
-            {
-
-            }
-
-           
         }
 
         [RelayCommand]
         public void AddToListening(AppShortcut appShortcut)
         {
-            Shortcuts.Single(x => x.PackageName == appShortcut.PackageName).IsChecked = !appShortcut.IsChecked;
+            if(appShortcut.IsChecked)
+            {
+                SelectShortcuts.Add(appShortcut);
+            }
+            else
+            {
+                SelectShortcuts.Remove(appShortcut);
+            }
         }
 
     }

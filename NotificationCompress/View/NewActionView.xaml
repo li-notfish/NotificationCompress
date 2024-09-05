@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="NotificationCompress.View.NewActionView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:help="clr-namespace:NotificationCompress.Helps"
+    xmlns:m="clr-namespace:NotificationCompress.Models"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:DataType="m:RuleAction"
+    Shell.PresentationMode="ModalAnimated">
+    <Frame>
+        <VerticalStackLayout Spacing="20">
+            <Label Text="名称" />
+            <Entry ClearButtonVisibility="WhileEditing" Text="{Binding Name}" />
+            <Label Text="过滤选项" />
+            <HorizontalStackLayout RadioButtonGroup.GroupName="RuleType" RadioButtonGroup.SelectedValue="{Binding RuleType}">
+                <RadioButton Content="噤声" IsChecked="{Binding RuleType, Converter={help:IntToEnumConverter}, ConverterParameter={x:Static help:RuleEnum.Silence}}" />
+                <RadioButton Content="过滤" IsChecked="{Binding RuleType, Converter={help:IntToEnumConverter}, ConverterParameter={x:Static help:RuleEnum.Filter}}" />
+                <RadioButton Content="转发" IsChecked="{Binding RuleType, Converter={help:IntToEnumConverter}, ConverterParameter={x:Static help:RuleEnum.Transmit}}" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout>
+                <Label Text="要过滤的应用：" />
+                <Button Clicked="OpenAppList" Text="选择" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout>
+                <Button
+                    Margin="10"
+                    Clicked="Complete_Clicked"
+                    Text="完成" />
+                <Button
+                    Margin="10"
+                    Clicked="Closed_Clicked"
+                    Text="取消" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </Frame>
+</ContentPage>
