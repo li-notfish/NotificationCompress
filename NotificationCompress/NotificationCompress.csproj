@@ -77,8 +77,9 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
-		<PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.8" />
+		<PackageReference Include="Xamarin.AndroidX.Collection.Jvm" Version="1.4.0.4" />
+		<PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.4.0.4" />
 		<PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.9.0.4" />
 	</ItemGroup>
 
@@ -89,10 +90,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="View\Popup\AppFilterPage.xaml">
+	  <MauiXaml Update="View\Popups\AppFilterPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\Popup\ShowFilterMessagePopup.xaml">
+	  <MauiXaml Update="View\Popups\ShowFilterMessagePopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

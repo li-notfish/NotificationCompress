@@ -20,7 +20,7 @@ namespace NotificationCompress.Services
     [IntentFilter(new[] { "android.service.notification.NotificationListenerService" })]
     public class NotificationListener : NotificationListenerService
     {
-        private SystemServices pmService = IPlatformApplication.Current.Services.GetService(typeof(SystemServices)) as SystemServices;
+        private SystemServices systemServices = IPlatformApplication.Current.Services.GetService(typeof(SystemServices)) as SystemServices;
         private RuleAggregator ruleAggregator = RuleAggregator.Instance;
 
         public override void OnCreate()
@@ -110,7 +110,7 @@ namespace NotificationCompress.Services
             {
                 var id = sbn.Id;
                 var pkgName = sbn.PackageName;
-                var name = pmService.GetApplicationName(pkgName);
+                var name = systemServices.GetApplicationName(pkgName);
                 var title = bundle.GetString(Notification.ExtraTitle) ?? "";
                 var content = bundle.GetString(Notification.ExtraText) ?? "";
                 var pendingIntent = sbn.Notification.ContentIntent;

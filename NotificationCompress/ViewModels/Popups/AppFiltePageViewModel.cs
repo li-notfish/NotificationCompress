@@ -7,7 +7,7 @@ using NotificationCompress.Helps;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Maui.Core;
 
-namespace NotificationCompress.ViewModels
+namespace NotificationCompress.ViewModels.Popups
 {
     public partial class AppFilterPageViewModel : ObservableRecipient
     {

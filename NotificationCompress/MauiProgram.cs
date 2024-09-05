@@ -3,7 +3,9 @@ using Microsoft.Extensions.Logging;
 using NotificationCompress.Helps;
 using NotificationCompress.Pages;
 using NotificationCompress.Services;
+using NotificationCompress.View.Popups;
 using NotificationCompress.ViewModels;
+using NotificationCompress.ViewModels.Popups;
 
 namespace NotificationCompress
 {
@@ -29,7 +31,8 @@ namespace NotificationCompress
                 .AddSingleton<LocalDatabase>()
                 .AddSingleton(IconCache.Instance)
                 .AddSingleton(RuleAggregator.Instance)
-                .AddTransientPopup<AppFilterPage, AppFilterPageViewModel>();
+                .AddTransientPopup<AppFilterPage, AppFilterPageViewModel>()
+                .AddTransientPopup<ShowFilterMessagePopup,ShowFilterMessagePopupViewModel>();
 
 #if DEBUG
     		builder.Logging.AddDebug();

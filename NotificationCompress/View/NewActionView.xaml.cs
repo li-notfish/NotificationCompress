@@ -1,3 +1,4 @@
+using AndroidX.Work;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Messaging;
 using NotificationCompress.Messages;
@@ -44,6 +45,10 @@ public partial class NewActionView : ContentPage
     private async void Complete_Clicked(object sender,EventArgs e)
 	{
         Tuple<RuleAction, bool> tuple = new Tuple<RuleAction, bool>(RuleAction, true);
+		if(RuleAction.RuleType == Helps.RuleEnum.Filter)
+		{
+	
+		}
         WeakReferenceMessenger.Default.Send<SendRuleAction>(new SendRuleAction(tuple));
         await Shell.Current.GoToAsync("..");
     }

@@ -1,7 +1,7 @@
 using CommunityToolkit.Maui.Views;
-using NotificationCompress.ViewModels;
+using NotificationCompress.ViewModels.Popups;
 
-namespace NotificationCompress.Pages;
+namespace NotificationCompress.View.Popups;
 
 public partial class AppFilterPage : Popup
 {

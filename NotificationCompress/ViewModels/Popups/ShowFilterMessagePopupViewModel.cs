@@ -9,18 +9,17 @@ using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.Input;
 using Android.Content;
 
-namespace NotificationCompress.ViewModels.Popup
+namespace NotificationCompress.ViewModels.Popups
 {
     public partial class ShowFilterMessagePopupViewModel : ObservableRecipient
     {
         [ObservableProperty]
         private ObservableGroupedCollection<string, List<Message>> filterGroupMessage = new ObservableGroupedCollection<string, List<Message>>();
 
-        private RuleAggregator ruleAggregator;
+        private RuleAggregator ruleAggregator = RuleAggregator.Instance;
 
-        public ShowFilterMessagePopupViewModel(RuleAggregator ruleAggregator)
+        public ShowFilterMessagePopupViewModel()
         {
-            this.ruleAggregator = ruleAggregator;
             WeakReferenceMessenger.Default.Register<SendFilterMessage>(this,FilterGroupMessageHandle);
         }
 

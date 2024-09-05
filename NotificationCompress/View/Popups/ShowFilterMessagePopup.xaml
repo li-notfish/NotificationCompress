@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentView
-    x:Class="NotificationCompress.View.Popup.ShowFilterMessagePopup"
+<toolkit:Popup
+    x:Class="NotificationCompress.View.Popups.ShowFilterMessagePopup"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:m="clr-namespace:NotificationCompress.Models"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:vm="clr-namespace:NotificationCompress.ViewModels.Popup"
+    xmlns:vm="clr-namespace:NotificationCompress.ViewModels.Popups"
     x:Name="ShowPage"
     x:DataType="vm:ShowFilterMessagePopupViewModel">
     <Grid>
@@ -34,4 +34,4 @@
             Command="{Binding NextSchedulerCommand}"
             Text="开始下一个计划" />
     </Grid>
-</ContentView>
+</toolkit:Popup>
